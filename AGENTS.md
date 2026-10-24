@@ -2,13 +2,29 @@
 
 此文件提供工作顺序；用户当前明确要求优先于仓库里的历史范围与建议。
 
-## 先读这些
+## 按任务选择入口
 
-1. 根目录 `README.md`：能力边界。
-2. `projects/pure/README.md`、`state.json`：基线、冻结输出、命令。
-3. `projects/pure/format.md`：已经动态确认的游戏格式。
-4. `projects/pure/next-steps.md`：未完成项，尤其全文字表尚未建立。
-5. `docs/validation.md`、`docs/pitfalls.md`：不能把脚本运行成功当成画面验收。
+先读根目录 `README.md`，确认能力与证据边界，再按用户任务选择路线。
+
+### 研究新游戏
+
+1. `docs/research.md`：建立独立基线、研究问题与项目记录。
+2. `docs/workflow.md`、`docs/debugging.md`：从实际画面追踪，进行最小实验。
+3. `docs/pitfalls.md`、`docs/validation.md`：复用调查方法与验证设计。
+4. 需要参考案例时，再读 `projects/pure/format.md` 或 `projects/cure/README.md`。
+   Pure 的地址、字库格式和资源分配只作为案例，不能作为新游戏的默认值。
+
+### 继续 Pure
+
+1. `projects/pure/README.md`、`state.json`：基线、冻结输出、命令。
+2. `projects/pure/AGENTS.md`、`format.md`：项目规则与已经动态确认的格式。
+3. `projects/pure/next-steps.md`：未完成项，尤其全文字表尚未建立。
+4. `docs/validation.md`、`docs/pitfalls.md`：已知问题与验证边界。
+
+### 整理经验或工具
+
+先找到现有案例证据，区分平台层方法和游戏特有实现。新文档应链接到案例；
+新工具只有在实际复用需求明确时再抽象接口，不为了通用外观改动冻结工程。
 
 ## 工程原则
 
