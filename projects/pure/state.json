@@ -1,0 +1,35 @@
+{
+  "game": "Memories Off - Pure (Japan)",
+  "platform_verified": "NGPC",
+  "as_of": "2026-10-24",
+  "frozen_version": "P05",
+  "scope": "Chinese menus, opening narration, related profiles and UI prompts; story remains Japanese",
+  "baseline": {
+    "size": 1048576,
+    "crc32": "7F919DDE",
+    "sha1": "20e7bb3b4eafca79fe0fd78e7f6e66d979be0502",
+    "sha256": "5e304f68ca29fff2def6c5f4209224871156b9502f041d69129d025f0245428d"
+  },
+  "p05": {
+    "size": 1048576,
+    "sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+    "translated_fields": 145,
+    "private_glyph_tiles": 318,
+    "changed_bytes": 20542
+  },
+  "story_work": {
+    "translation_started": false,
+    "complete_unicode_script_export_available": false,
+    "complete_japanese_glyph_mapping_available": false,
+    "provisional_dialogue_candidates": 5852,
+    "provisional_display_glyph_tokens": 107803,
+    "provisional_distinct_glyph_ids": 1155
+  },
+  "known_issues": [
+    "NgpCraft native/HLE black-background opening narration was blank during recording; root cause not established.",
+    "Beetle AV metadata reports 60.25fps; capture must cross-check actual PCM/raster duration.",
+    "Full story routes and real NGPC hardware acceptance are not completed."
+  ],
+  "independent_agent_handoff_acceptance": "not performed; explicitly deferred",
+  "source_migration_rebuild": "P05 output SHA-256 matched in the original workspace"
+}

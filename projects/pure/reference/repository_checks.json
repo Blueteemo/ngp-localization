@@ -1,0 +1,105 @@
+{
+  "checked_on": "2026-10-24",
+  "purpose": "adapter migration self-check, not independent Agent acceptance",
+  "source_build_exact_p05": true,
+  "guarded_manifest_rebuild_exact_p05": true,
+  "rom_free_unit_tests": 9,
+  "results": {
+    "med_opening": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "core": "med",
+      "frames": 17500,
+      "opening_fields_reached": 14,
+      "matched_opening_landmarks": 24,
+      "all_landmarks_same_frame": true,
+      "hardware_diagnostics": null,
+      "opening_black_background_narration_visible": true,
+      "visual_status": "narration visible; inspect other captures"
+    },
+    "native_opening": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "core": "native",
+      "frames": 17500,
+      "opening_fields_reached": 14,
+      "matched_opening_landmarks": 24,
+      "all_landmarks_same_frame": true,
+      "hardware_diagnostics": {
+        "violations": 0
+      },
+      "opening_black_background_narration_visible": false,
+      "visual_status": "known blank narration; trace success is not visual success"
+    },
+    "menus": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "screens_captured": 18,
+      "scope": "menu capture only; separate persistence result is included"
+    },
+    "persistent_save_load": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "separate_process_save_load": true,
+      "saved_script": "0x293377",
+      "loaded_script": "0x293377",
+      "next_script": "0x293390",
+      "loaded_position_exact": true,
+      "progressed": true,
+      "initialize_performed_only_on_copied_disposable_save": true,
+      "initialized_flash_changed": true
+    },
+    "native_signature": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "native_menu_hw_violations": 0,
+      "signature_gray_pixel_counts": {
+        "before_menu": 0,
+        "menu": 187,
+        "options": 0,
+        "returned_title": 0,
+        "returned_menu": 187
+      },
+      "title_to_menu_options_title_menu_verified": true
+    },
+    "med_transition": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "core": "med",
+      "frames_captured": 90,
+      "menu_ready_after_A": 25,
+      "signature_first_after_A": 25,
+      "signature_absent_through_transition": true,
+      "signature_stays_visible_when_ready": true,
+      "hardware_violations": null
+    },
+    "native_transition": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "core": "native",
+      "frames_captured": 90,
+      "menu_ready_after_A": 28,
+      "signature_first_after_A": 28,
+      "signature_absent_through_transition": true,
+      "signature_stays_visible_when_ready": true,
+      "hardware_violations": 0
+    },
+    "recording": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "emulator": "Beetle/Mednafen NGP",
+      "real_hardware_recording": false,
+      "from_reset": true,
+      "uninterrupted": true,
+      "gameplay_speed": "original raster clock, unmodified audio",
+      "video_fps": "6144000/102485",
+      "frames": 5098,
+      "video_seconds": 85.03719563802083,
+      "audio_seconds": 85.0330612244898,
+      "audio_sample_rate": 44100,
+      "audio_channels": 2,
+      "audio_callbacks_fully_consumed": 5098,
+      "black_background_narration_verified": true,
+      "title_first_complete_frame": 4648,
+      "A_pressed_frame": 4738,
+      "A_hold_frames": 3,
+      "menu_hold_frames": 360,
+      "scale": "nearest neighbour 4x",
+      "audio_peak": 7720,
+      "output_sha256": "0884eaeada530f2ee8c752aa9ee40a1c00408a3c8ebe2fd95832efed360bc5d7"
+    }
+  },
+  "independent_agent_acceptance": "not performed"
+}

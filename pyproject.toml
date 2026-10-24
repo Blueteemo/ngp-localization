@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ngp-localization"
+version = "0.1.0"
+description = "Neo Geo Pocket/Color localization practice and reproducible game adapters"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "Blueteemo / 千岚之夏"}]
+dependencies = []
+
+[project.optional-dependencies]
+pure = ["Pillow==12.3.0", "numpy==2.3.5"]
+
+[project.scripts]
+ngp-localization = "ngp_localization.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["ngp_localization*"]

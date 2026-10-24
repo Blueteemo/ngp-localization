@@ -1,0 +1,362 @@
+{
+  "observed_on": "2026-10-24",
+  "kind": "historic project observations, not an independent Agent handoff acceptance",
+  "results": {
+    "native_opening": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "core": "native",
+      "frames": 17500,
+      "opening_fields_reached": 14,
+      "matched_opening_landmarks": 24,
+      "all_landmarks_same_frame": true,
+      "hardware_diagnostics": {
+        "violations": 0
+      },
+      "landmarks": [
+        {
+          "pointer": "0x2ca682",
+          "original_frame": 98,
+          "translated_frame": 98,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca6bb",
+          "original_frame": 476,
+          "translated_frame": 476,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca707",
+          "original_frame": 991,
+          "translated_frame": 991,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca7d7",
+          "original_frame": 1388,
+          "translated_frame": 1388,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca835",
+          "original_frame": 2220,
+          "translated_frame": 2220,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca904",
+          "original_frame": 2619,
+          "translated_frame": 2619,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca960",
+          "original_frame": 3450,
+          "translated_frame": 3450,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2caa3a",
+          "original_frame": 3860,
+          "translated_frame": 3860,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca682",
+          "original_frame": 5962,
+          "translated_frame": 5962,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca6bb",
+          "original_frame": 6340,
+          "translated_frame": 6340,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca74e",
+          "original_frame": 6853,
+          "translated_frame": 6853,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca7d7",
+          "original_frame": 7260,
+          "translated_frame": 7260,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca885",
+          "original_frame": 8091,
+          "translated_frame": 8091,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca904",
+          "original_frame": 8488,
+          "translated_frame": 8488,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca9b7",
+          "original_frame": 9318,
+          "translated_frame": 9318,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2caa3a",
+          "original_frame": 9723,
+          "translated_frame": 9723,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca682",
+          "original_frame": 11825,
+          "translated_frame": 11825,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca6bb",
+          "original_frame": 12203,
+          "translated_frame": 12203,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca7a3",
+          "original_frame": 12716,
+          "translated_frame": 12716,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca7d7",
+          "original_frame": 13109,
+          "translated_frame": 13109,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca8cc",
+          "original_frame": 13940,
+          "translated_frame": 13940,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca904",
+          "original_frame": 14335,
+          "translated_frame": 14335,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2caa05",
+          "original_frame": 15165,
+          "translated_frame": 15165,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2caa3a",
+          "original_frame": 15565,
+          "translated_frame": 15565,
+          "difference": 0
+        }
+      ]
+    },
+    "med_opening": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "core": "med",
+      "frames": 17500,
+      "opening_fields_reached": 14,
+      "matched_opening_landmarks": 24,
+      "all_landmarks_same_frame": true,
+      "hardware_diagnostics": null,
+      "landmarks": [
+        {
+          "pointer": "0x2ca682",
+          "original_frame": 46,
+          "translated_frame": 46,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca6bb",
+          "original_frame": 421,
+          "translated_frame": 421,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca707",
+          "original_frame": 934,
+          "translated_frame": 934,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca7d7",
+          "original_frame": 1331,
+          "translated_frame": 1331,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca835",
+          "original_frame": 2163,
+          "translated_frame": 2163,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca904",
+          "original_frame": 2562,
+          "translated_frame": 2562,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca960",
+          "original_frame": 3393,
+          "translated_frame": 3393,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2caa3a",
+          "original_frame": 3803,
+          "translated_frame": 3803,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca682",
+          "original_frame": 5905,
+          "translated_frame": 5905,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca6bb",
+          "original_frame": 6280,
+          "translated_frame": 6280,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca74e",
+          "original_frame": 6791,
+          "translated_frame": 6791,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca7d7",
+          "original_frame": 7198,
+          "translated_frame": 7198,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca885",
+          "original_frame": 8029,
+          "translated_frame": 8029,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca904",
+          "original_frame": 8426,
+          "translated_frame": 8426,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca9b7",
+          "original_frame": 9256,
+          "translated_frame": 9256,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2caa3a",
+          "original_frame": 9661,
+          "translated_frame": 9661,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca682",
+          "original_frame": 11763,
+          "translated_frame": 11763,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca6bb",
+          "original_frame": 12138,
+          "translated_frame": 12138,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca7a3",
+          "original_frame": 12649,
+          "translated_frame": 12649,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca7d7",
+          "original_frame": 13042,
+          "translated_frame": 13042,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca8cc",
+          "original_frame": 13873,
+          "translated_frame": 13873,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2ca904",
+          "original_frame": 14268,
+          "translated_frame": 14268,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2caa05",
+          "original_frame": 15098,
+          "translated_frame": 15098,
+          "difference": 0
+        },
+        {
+          "pointer": "0x2caa3a",
+          "original_frame": 15498,
+          "translated_frame": 15498,
+          "difference": 0
+        }
+      ]
+    },
+    "persistence": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "separate_process_save_load": true,
+      "saved_script": "0x293377",
+      "loaded_script": "0x293377",
+      "next_script": "0x293390",
+      "loaded_position_exact": true,
+      "progressed": true,
+      "initialize_performed_only_on_copied_disposable_save": true,
+      "initialized_flash_changed": true
+    },
+    "signature": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "native_menu_hw_violations": 0,
+      "signature_gray_pixel_counts": {
+        "before_menu": 0,
+        "menu": 187,
+        "options": 0,
+        "returned_title": 0,
+        "returned_menu": 187
+      },
+      "title_to_menu_options_title_menu_verified": true
+    },
+    "native_transition": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "core": "native",
+      "frames_captured": 90,
+      "menu_ready_after_A": 28,
+      "signature_first_after_A": 28,
+      "signature_absent_through_transition": true,
+      "signature_stays_visible_when_ready": true,
+      "hardware_violations": 0
+    },
+    "med_transition": {
+      "rom_sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
+      "core": "med",
+      "frames_captured": 90,
+      "menu_ready_after_A": 25,
+      "signature_first_after_A": 25,
+      "signature_absent_through_transition": true,
+      "signature_stays_visible_when_ready": true,
+      "hardware_violations": null
+    }
+  },
+  "known_visual_failure": "NgpCraft native black-background opening narration was blank during A/V capture; Beetle renders it. Root cause not established."
+}

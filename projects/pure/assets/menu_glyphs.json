@@ -1,0 +1,56 @@
+{
+  "source": "Fusion Pixel Font 2026.10.16; Cure menu subset, with project pixel adjustments",
+  "license": "SIL Open Font License 1.1",
+  "glyphs": [
+    {
+      "character": "始",
+      "bitmap": "210210f245445fa50097e54224254287e000",
+      "mode": "fusion12_shift_up_one_row"
+    },
+    {
+      "character": "定",
+      "bitmap": "040ffe8020007fc04024027c2405c083e000",
+      "mode": "fusion12_shift_up_one_row"
+    },
+    {
+      "character": "开",
+      "bitmap": "ffe208208208208ffe208208408408808000",
+      "mode": "fusion12_shift_up_one_row"
+    },
+    {
+      "character": "游",
+      "bitmap": "9104903de92051c1c414857e548948ad8000",
+      "mode": "fusion12_shift_up_one_row"
+    },
+    {
+      "character": "玩",
+      "bitmap": "0fce004004005fee4844844868ac8a10e000",
+      "mode": "fusion12_shift_up_one_row"
+    },
+    {
+      "character": "继",
+      "bitmap": "4884aa89ca88cbe48889ceaa088280cfe000",
+      "mode": "fusion12_shift_up_one_row"
+    },
+    {
+      "character": "续",
+      "bitmap": "41047c810afec424a8848efe010224cc2000",
+      "mode": "fusion12_shift_up_one_row"
+    },
+    {
+      "character": "设",
+      "bitmap": "878448048048d8e4004fc4844486305ce000",
+      "mode": "fusion12_shift_up_one_row"
+    },
+    {
+      "character": "选",
+      "bitmap": "8904fc110010dfe44844848a50ea009fe000",
+      "mode": "fusion12_shift_up_one_row"
+    },
+    {
+      "character": "项",
+      "bitmap": "0fee104fe482492492492692c28044082000",
+      "mode": "fusion12_shift_up_one_row"
+    }
+  ]
+}
