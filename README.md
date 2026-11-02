@@ -37,15 +37,13 @@ NGP 在仓库名中是平台系列统称。方法可供迁移参考，具体编�
 
 | 案例 | 已有成果 | 当前公开工程范围 |
 | --- | --- | --- |
-| [秋之回忆 Pure](projects/pure/README.md) | P06 菜单及开场汉化已在云盘定稿；全文汉化计划已确定 | 公开构建仍为 P05：生成源码、固定字体依赖、重建校验、双核心验证及 Beetle 有声录制入口；P06 尚未迁入 |
+| [秋之回忆 Pure](projects/pure/README.md) | 冻结菜单 / 开场构建、正文控制和 Flash 布局研究 | P06 构建入口、私有配置接口、文本 / 字形工具和合成测试 |
 | [无限轮回：Cure.](projects/cure/README.md) | 简体中文汉化定稿与正文重定位经验 | 案例说明和方法总结；完整重建工程尚未迁入 |
 
-截至 2026-11-02，云盘最新定稿为 P06（2026-10-27），修正了存读档确认界面“是／否”的行位。
-**发布定稿与本仓库可重建基线不同：下方命令仍生成 P05，不会生成 P06。**
-Pure P05 迁移后的输出 SHA-256 已确认与冻结版本相同。全文汉化计划已确定，但正文翻译尚未开始，
-完整日文字表与 Unicode 剧本导出尚未建立。下一步先同步 P06 工程，再推进字形映射、脚本导出和正文小样。
-陌生 Agent 独立接手验收尚未开展。
-各项历史验证的覆盖范围和已知失败见项目记录，不能由构建成功推断全剧情通过。
+P06 适配器结合用户本地提示配置，可从日版原件重建已核对的冻结输出。历史构建依赖与回归记录保留，不要求使用者维护两套成品。
+正文工具只读取外部私有输入，公开示例全部自造，不附带全文汉化数据或私人项目进度。
+工程案例包括跨进程存档、可变长控制操作数、扩容后的 Flash 几何和验证边界，
+见 [正文重定位工程案例](projects/pure/story-progress.md)。构建成功不等于全剧情或显示验收通过。
 
 ## 快速开始
 
@@ -57,21 +55,24 @@ python -m venv .venv
 python -m pip install -e ".[pure]"
 python -m ngp_localization doctor --rom "/path/to/Memories Off - Pure (Japan).ngc"
 python projects/pure/manage.py fonts
-python projects/pure/manage.py build --rom "/path/to/Memories Off - Pure (Japan).ngc"
+python projects/pure/manage.py build --rom "/path/to/Memories Off - Pure (Japan).ngc" --text-config /path/to/private-p06-text.json
 ```
 
-输出默认在被 Git 忽略的 `projects/pure/private/p05/`，应得到：
+P06 需要使用者已有的私有提示配置；仓库只说明接口，不提供实际游戏字串。
+配置结构见 [工程案例](projects/pure/story-progress.md)，其中自造示例不能生成冻结版本。
+上述 P06 命令输出在被 Git 忽略的 `projects/pure/private/p06/`，应得到：
 
-- `Pure_P05.ngc`：可直接启动的 ROM。
-- `P05_patch.json`：**从你自己的 ROM 本地生成**的带校验补丁清单，不提交到 Git。
+- `Pure_P06.ngc`：可直接启动的 ROM。
+- `P06_patch.json`：**从你自己的 ROM 本地生成**的带校验补丁清单，不提交到 Git。
 
 预期 ROM SHA-256：
 
 ```text
-d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13
+12ac7406dbb255e20c682fa11c001ffa37cc626830f3b0310e2bb02554995fa7
 ```
 
-仅重建 P05 不需要 Node.js、MCP 服务或模拟器。运行验证时，按
+省略 `--version` 默认构建 P06，仍必须提供 `--text-config`。历史 `--version p05` 仅供回归。
+重建不需要 Node.js、MCP 服务或模拟器。运行验证时，按
 [环境说明](docs/environment.md) 接入已有核心；不要为了 MCP 重新搭建已有环境。
 
 ## 工具自检

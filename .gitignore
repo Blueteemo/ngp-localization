@@ -23,6 +23,8 @@ projects/pure/assets/fusion12/
 *.mp4
 *.gif
 P05_patch.json
+P06_patch.json
+story_sample.json
 *.ips
 *.so
 *.dll
