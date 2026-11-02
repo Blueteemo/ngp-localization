@@ -201,18 +201,43 @@ class StoryBuilderTests(unittest.TestCase):
 
     def test_half_width_line_limit_uses_source_not_an_unlimited_exemption(self):
         raw = b'\xfe\x8b\xc0' + bytes([1])*16 + b'\x80'
-        record = decode_record(raw, offset=0, mapping={})
+        record = decode_record(raw, offset=0, mapping={1:'A'})
         _, checks = story.parse_target('{{8b}}'+'A'*16, record)
         self.assertEqual(checks['mode'],'source_half_width_lines')
         self.assertEqual(checks['limits'], [16])
-        self.assertEqual(checks['ascii_sequence_validation'], 'external_required')
+        self.assertEqual(checks['ascii_sequence_validation'], 'unchanged_long_ascii_lines')
+        with self.assertRaises(ValueError): story.parse_target('{{8b}}'+'甲'*16,record)
+        short = decode_record(bytes.fromhex('fec0018b0280'), offset=0, mapping={1:'A',2:'B'})
+        with self.assertRaisesRegex(ValueError, 'narrow'): story.parse_target('甲{{8b}}乙', short)
+        story.parse_target('A{{8b}}乙', short)
+        indirect = decode_record(bytes.fromhex('fec0018ce03c8b0280'), offset=0, mapping={1:'A',2:'B'})
+        with self.assertRaisesRegex(ValueError, 'narrow'): story.parse_target('甲{{8ce03c}}{{8b}}乙', indirect)
+        with self.assertRaises(ValueError): story.parse_target('{{8b}}'+'B'*16,record)
         with self.assertRaises(ValueError): story.parse_target('{{8b}}'+'A'*17,record)
+
+    def test_input_set_rejects_mixed_generation(self):
+        import hashlib, json
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            paths = {name: root/name for name in ('inventory','translations','selection')}
+            for path in paths.values(): path.write_bytes(b'[]')
+            pin = root/'input-set.json'
+            pin.write_text(json.dumps({name: hashlib.sha256(path.read_bytes()).hexdigest()
+                                       for name,path in paths.items()}), encoding='utf-8')
+            snapshots, digest = story.read_input_set(pin, paths)
+            self.assertEqual(set(snapshots), set(paths))
+            paths['translations'].write_bytes(b'[1]')
+            with self.assertRaisesRegex(ValueError, 'generation'):
+                story.read_input_set(pin, paths)
+            pin.write_text('{}', encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'exactly'):
+                story.read_input_set(pin, paths)
 
     def test_cli_invalid_input_never_creates_output_or_requires_pillow(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp); rom=root/'original';rom.write_bytes(b'synthetic-not-P06')
             source=root/'input.json';source.write_text('{}');output=root/'new-output'
-            command=[sys.executable,'-S',str(SCRIPTS/'build_story.py'),'--rom',str(rom),
+            command=[sys.executable,'-S',str(SCRIPTS/'build_story.py'),'--rom',str(rom),'--input-set',str(source),
                      '--inventory',str(source),'--translations',str(source),'--selection',str(source),'--out',str(output)]
             result=subprocess.run(command,capture_output=True,text=True)
             self.assertEqual(result.returncode,2,result.stderr)

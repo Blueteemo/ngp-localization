@@ -12,25 +12,8 @@ EXPECTED = {
 }
 
 
-def build(version="p05", *, seed=None, output=None, field_suffixes=None):
-    if version not in EXPECTED or (version == "p06" and seed is None):
-        raise ValueError("P06 needs the freshly rebuilt P05 allocation seed")
-    if not __debug__:
-        raise RuntimeError("Frozen builder checks require Python without -O")
-    original=BASE.read_bytes();assert hashlib.sha256(original).hexdigest()=='5e304f68ca29fff2def6c5f4209224871156b9502f041d69129d025f0245428d'
-    b=bytearray(original);patches=[];fields=[]
-    spec=json.loads((R/'assets/translations_p05.json').read_text())
-    if version == 'p06':
-     if not isinstance(field_suffixes, dict) or set(field_suffixes) != {'0x91958', '0x91b2d'}:
-      raise ValueError('P06 requires private field suffixes for its two adjusted prompts')
-     for address, value in field_suffixes.items():
-      if not isinstance(value, str): raise ValueError('Private field suffixes must be strings')
-      spec['fields'][address][-1] = value
-    font=ImageFont.truetype(str(FONT_ROOT/'fusion12/fusion-pixel-12px-monospaced-zh_hans.otf'),12)
-    donors={g['character']:int(g['bitmap'],16)for g in json.loads((R/'assets/menu_glyphs.json').read_text())['glyphs']}
-    def put(off,data,why):
-     before=bytes(b[off:off+len(data)]);patches.append({'offset':off,'before':before.hex(),'after':data.hex(),'reason':why});b[off:off+len(data)]=data
-    from ngp_localization.glyph12 import pack, unpack
+def make_charbits(original, font, donors):
+    from ngp_localization.glyph12 import unpack
     def charbits(ch):
      if ch==' ':return 0
      if 'A'<=ch<='Z':idx=ord(ch)-21
@@ -45,12 +28,38 @@ def build(version="p05", *, seed=None, output=None, field_suffixes=None):
      # The first display scanline is clipped by the original dialogue window.
      # Keep the font's original blank top row, as the Japanese bank does.
      return bits
+    return charbits
+
+
+def build(version="p05", *, seed=None, output=None, field_suffixes=None):
+    if version not in EXPECTED or (version == "p06" and seed is None):
+        raise ValueError("P06 needs the freshly rebuilt P05 allocation seed")
+    if not __debug__:
+        raise RuntimeError("Frozen builder checks require Python without -O")
+    original=BASE.read_bytes();assert hashlib.sha256(original).hexdigest()=='5e304f68ca29fff2def6c5f4209224871156b9502f041d69129d025f0245428d'
+    b=bytearray(original);patches=[];fields=[]
+    spec=json.loads((R/'assets/translations_p05.json').read_text(encoding='utf-8'))
+    if version == 'p06':
+     if not isinstance(field_suffixes, dict) or set(field_suffixes) != {'0x91958', '0x91b2d'}:
+      raise ValueError('P06 requires private field suffixes for its two adjusted prompts')
+     for address, value in field_suffixes.items():
+      if not isinstance(value, str): raise ValueError('Private field suffixes must be strings')
+      spec['fields'][address][-1] = value
+    font=ImageFont.truetype(str(FONT_ROOT/'fusion12/fusion-pixel-12px-monospaced-zh_hans.otf'),12)
+    donors={g['character']:int(g['bitmap'],16)for g in json.loads((R/'assets/menu_glyphs.json').read_text(encoding='utf-8'))['glyphs']}
+    def put(off,data,why):
+     before=bytes(b[off:off+len(data)]);patches.append({'offset':off,'before':before.hex(),'after':data.hex(),'reason':why});b[off:off+len(data)]=data
+    from ngp_localization.glyph12 import pack, unpack
+    charbits = make_charbits(original, font, donors)
     glyphs=copy.deepcopy(seed['glyphs']) if seed else []
     bybits={int(g['bitmap'],16):g['slot'] for g in glyphs}
     layout={f['original_offset']:(f['new_offset'],len(bytes.fromhex(f['payload_hex']))) for f in seed['fields']} if seed else {}
     def slot(bits,label):
      if bits not in bybits:
       i=len(glyphs);assert i<1000;bybits[bits]=i;glyphs.append({'slot':i,'label':label,'bitmap':bits.to_bytes(18,'big').hex(),'packed':pack(bits).hex()})
+     entry = glyphs[bybits[bits]]
+     labels = entry.setdefault('labels', [entry['label']])
+     if label not in labels: labels.append(label)
      return bybits[bits]
     def coded_slots(ids):
      out=bytearray();page=None
@@ -149,16 +158,17 @@ def build(version="p05", *, seed=None, output=None, field_suffixes=None):
     from build_status_art import build_assets
     cursor,status_art=build_assets(original,put,cursor)
     assert cursor<0xd3000
-    D=Path(output) if output is not None else OUTPUT;D.mkdir(parents=True,exist_ok=True)
+    D=Path(output) if output is not None else OUTPUT
     name=f'Pure_{version.upper()}.ngc'
     from ngp_localization.paths import ensure_distinct_paths
     ensure_distinct_paths([BASE], [D/name, D/f'{version.upper()}_patch.json'])
     if hashlib.sha256(b).hexdigest()!=EXPECTED[version]:raise SystemExit(f'Output differs from frozen {version.upper()}; no frozen output written')
-    (D/name).write_bytes(b)
     m={'base_sha256':hashlib.sha256(original).hexdigest(),'output_sha256':hashlib.sha256(b).hexdigest(),'rom_size':len(b),'changed_bytes':sum(x!=y for x,y in zip(original,b)),'patches':patches,'fields':fields,'glyphs':glyphs,'relocated_text_end':cursor,'new_font_end':0xd3000+len(glyphs)*18,'status_art':status_art}
     m['title_art']=title_art
     m['signature']=signature
     m['baseline_fix']='Cure donor bitmaps shifted down one pixel to match Fusion glyph baseline'
-    (D/f'{version.upper()}_patch.json').write_text(json.dumps(m,ensure_ascii=False,indent=2));print('fields',len(fields),'glyph tiles',len(glyphs),'changed',m['changed_bytes'],'sha',m['output_sha256'])
+    from ngp_localization.artifacts import publish_artifacts
+    publish_artifacts(D, {name: b, f'{version.upper()}_patch.json': json.dumps(m,ensure_ascii=False,indent=2).encode('utf-8')})
+    print('fields',len(fields),'glyph tiles',len(glyphs),'changed',m['changed_bytes'],'sha',m['output_sha256'])
 
     return m

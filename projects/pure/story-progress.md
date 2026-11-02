@@ -6,12 +6,12 @@
 
 ## 冻结构建与私有输入
 
-P05 输出 SHA-256：`d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13`。
+默认构建入口为 P06；P05 仅保留内部派生依赖与历史回归。
 P06 输出 SHA-256：`12ac7406dbb255e20c682fa11c001ffa37cc626830f3b0310e2bb02554995fa7`。
 P06 先从源码派生 P05 的字模槽位 / 字段容量，再读取私有提示配置生成；不在 Git 中存 ROM 提取结果。
 
 ```bash
-python projects/pure/manage.py build --version p06 --rom /path/to/original.ngc \
+python projects/pure/manage.py build --rom /path/to/original.ngc \
   --text-config /path/to/private-p06-text.json
 ```
 
@@ -23,6 +23,8 @@ python projects/pure/manage.py build --version p06 --rom /path/to/original.ngc \
 
 真实配置留在本地；输出仍须匹配冻结哈希。外置配置前后已实际重建，P05 / P06 哈希不变。
 命令不修改原件；自定义翻译属于另一个实验，不应删除冻结校验来冒充 P06。
+构建使用新的输出目录或空目录；已有完整且逐字节相同的产物可幂等复验，内容变化必须使用新目录，
+不覆盖旧构建或存档。发布使用 POSIX 目录句柄与 no-follow 检查；当前验证环境为 Linux，不据此宣称 macOS 已验收。
 
 ## 可逆导出与单条实验
 
@@ -46,9 +48,21 @@ OCR 只产生未验收候选，不自动生成“已确认”字表。字形应�
 
 ## 扩容不能只补零：Flash 几何案例
 
-`build_story.py` 接收私有 inventory、译文 JSON 和显式 selection；不会自动下载、附带或公开游戏数据。
+`build_story.py` 接收私有 inventory、译文 JSON、显式 selection 和必填 `--input-set`；不会自动下载、附带或公开游戏数据。
+输入集清单恰含 `inventory`、`translations`、`selection` 三个键，值为对应文件原始字节的 SHA-256。
+生产者先完成并发布三份文件，再发布同一版本的清单；消费者按清单验证一次读取的字节快照，拒绝混合版本。
+不要在消费者发现不匹配时直接重算清单掩盖生产端竞态。
+
+```bash
+python projects/pure/scripts/build_story.py --rom /path/to/Pure_P06.ngc \
+  --inventory /path/to/private-inventory.json --translations /path/to/private-translations.json \
+  --selection /path/to/private-selection.json --input-set /path/to/private-input-set.json \
+  --out /path/to/new-private-build
+```
+
 它核对原记录字节、FD / FE 标记、控制码与换行的完整相对顺序、行宽、缺字及保留区。
-普通行上限 12 字；定位式对白按原控制段长度约束；窄字距和英文段落另验。
+普通行上限 12 字；定位式对白按原控制段长度约束。超长 `8B` 行仅允许与已映射源文本一致的 ASCII / 括号段，
+不能凭含有 `8B` 就放行任意中文长行；其他窄字距设计仍需专门视觉验收。
 正文放在文件 `0x100000..0x170000`，新字库从 `0x180000` 开始，字体钩子按文本地址选择字库。
 
 原 8 Mbit 游戏使用擦除块 16 / 17。ROM 扩到 16 Mbit 后，同一块号对应两个普通 64 KiB 块，恰好

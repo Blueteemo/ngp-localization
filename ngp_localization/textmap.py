@@ -264,7 +264,7 @@ def main():
     try:
         offsets = list(args.offset)
         if args.offsets:
-            extra = json.loads(args.offsets.read_text())
+            extra = json.loads(args.offsets.read_text(encoding='utf-8'))
             if not isinstance(extra, list) or any(type(x) is not int for x in extra):
                 raise ValueError('--offsets requires a JSON integer array')
             offsets.extend(extra)

@@ -30,6 +30,27 @@ class StorySampleTests(unittest.TestCase):
             sample.encode_sample({}, '自造文本')
 
 
+class VerifiedSampleTests(unittest.TestCase):
+    def test_manifest_label_tampering_does_not_change_actual_glyph(self):
+        from ngp_localization.glyph12 import pack
+        bitmap=pack(1);rom=bytearray(0xD3000+18);rom[0xD3000:]=bitmap
+        manifest={'glyphs':[{'slot':0,'label':'错','packed':bitmap.hex()}]}
+        self.assertEqual(sample.verified_slots(rom,manifest,'甲乙',lambda c:1),{'甲':0,'乙':0})
+        manifest['glyphs'][0]['packed']=bytes(18).hex()
+        with self.assertRaises(ValueError):sample.verified_slots(rom,manifest,'甲',lambda c:1)
+
+    def test_wrong_slot_and_wrong_character_bitmap_are_rejected(self):
+        from ngp_localization.glyph12 import pack
+        bitmap=pack(1);rom=bytearray(0xD3000+36);rom[0xD3000:0xD3000+18]=bitmap
+        manifest={'glyphs':[{'slot':1,'label':'甲','packed':bitmap.hex()}]}
+        with self.assertRaises(ValueError):sample.verified_slots(rom,manifest,'甲',lambda c:1)
+        manifest['glyphs'][0]['slot']=0
+        with self.assertRaises(ValueError):sample.verified_slots(rom,manifest,'乙',lambda c:2)
+
+    def test_public_summary_never_includes_text(self):
+        self.assertEqual(sample.public_summary({'text':'自造私密样例','output_sha256':'hash'}),{'output_sha256':'hash'})
+
+
 class PrivateConfigTests(unittest.TestCase):
     def test_private_input_cannot_be_overwritten_by_output(self):
         with tempfile.TemporaryDirectory() as d:

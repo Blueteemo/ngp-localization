@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Portable command entry point for frozen Pure P05/P06 adapters."""
+"""P06 build entry point; historical adapters remain for regression."""
 import argparse
 import hashlib
 import json
@@ -18,7 +18,7 @@ BASE_SHA = "5e304f68ca29fff2def6c5f4209224871156b9502f041d69129d025f0245428d"
 
 
 def fonts(source=None):
-    lock = json.loads((PROJECT / "assets/fonts.lock.json").read_text())
+    lock = json.loads((PROJECT / "assets/fonts.lock.json").read_text(encoding='utf-8'))
     for size, entry in lock.items():
         target = PROJECT / f"assets/fusion{size}" / entry["filename"]
         if target.is_file() and hashlib.sha256(target.read_bytes()).hexdigest() == entry["sha256"]:
@@ -58,7 +58,7 @@ def main():
         q.add_argument("--rom", type=Path, required=name in ("build", "estimate", "story-sample"))
         q.add_argument("--out", type=Path)
         if name == "build":
-            q.add_argument("--version", choices=("p05", "p06"), default="p05")
+            q.add_argument("--version", choices=("p05", "p06"), default="p06", help="P06 by default; P05 is retained for historical regression")
             q.add_argument("--text-config", type=Path)
         if name == "story-sample":
             q.add_argument("--text-file", type=Path, required=True)

@@ -37,10 +37,10 @@ NGP 在仓库名中是平台系列统称。方法可供迁移参考，具体编�
 
 | 案例 | 已有成果 | 当前公开工程范围 |
 | --- | --- | --- |
-| [秋之回忆 Pure](projects/pure/README.md) | 冻结菜单 / 开场构建、正文控制和 Flash 布局研究 | P05 工程、读取私有配置的 P06 适配器、文本 / 字形工具和合成测试 |
+| [秋之回忆 Pure](projects/pure/README.md) | 冻结菜单 / 开场构建、正文控制和 Flash 布局研究 | P06 构建入口、私有配置接口、文本 / 字形工具和合成测试 |
 | [无限轮回：Cure.](projects/cure/README.md) | 简体中文汉化定稿与正文重定位经验 | 案例说明和方法总结；完整重建工程尚未迁入 |
 
-P06 适配器结合用户本地提示配置，可从日版原件重建已核对的冻结输出；P05 固定结果保留。
+P06 适配器结合用户本地提示配置，可从日版原件重建已核对的冻结输出。历史构建依赖与回归记录保留，不要求使用者维护两套成品。
 正文工具只读取外部私有输入，公开示例全部自造，不附带全文汉化数据或私人项目进度。
 工程案例包括跨进程存档、可变长控制操作数、扩容后的 Flash 几何和验证边界，
 见 [正文重定位工程案例](projects/pure/story-progress.md)。构建成功不等于全剧情或显示验收通过。
@@ -55,7 +55,7 @@ python -m venv .venv
 python -m pip install -e ".[pure]"
 python -m ngp_localization doctor --rom "/path/to/Memories Off - Pure (Japan).ngc"
 python projects/pure/manage.py fonts
-python projects/pure/manage.py build --version p06 --rom "/path/to/Memories Off - Pure (Japan).ngc" --text-config /path/to/private-p06-text.json
+python projects/pure/manage.py build --rom "/path/to/Memories Off - Pure (Japan).ngc" --text-config /path/to/private-p06-text.json
 ```
 
 P06 需要使用者已有的私有提示配置；仓库只说明接口，不提供实际游戏字串。
@@ -71,8 +71,8 @@ P06 需要使用者已有的私有提示配置；仓库只说明接口，不提�
 12ac7406dbb255e20c682fa11c001ffa37cc626830f3b0310e2bb02554995fa7
 ```
 
-`--version p05` 可重建历史 P05；为兼容旧调用，省略 `--version` 仍默认 P05。
-重建 P05/P06 不需要 Node.js、MCP 服务或模拟器。运行验证时，按
+省略 `--version` 默认构建 P06，仍必须提供 `--text-config`。历史 `--version p05` 仅供回归。
+重建不需要 Node.js、MCP 服务或模拟器。运行验证时，按
 [环境说明](docs/environment.md) 接入已有核心；不要为了 MCP 重新搭建已有环境。
 
 ## 工具自检

@@ -15,7 +15,8 @@
     "sha256": "d2b50428d6ae56477178bdbfd99fb1a5cb128c8f38da4463d1ddfb433a22aa13",
     "translated_fields": 145,
     "private_glyph_tiles": 318,
-    "changed_bytes": 20542
+    "changed_bytes": 20542,
+    "role": "internal derivation dependency and historical regression; not a separate public-facing deliverable"
   },
   "story_work": {
     "public_scope": "tooling and engineering methods only; active translation data and status stay private",
@@ -34,7 +35,7 @@
     "P05",
     "P06"
   ],
-  "default_build_version": "P05",
+  "default_build_version": "P06",
   "p06": {
     "size": 1048576,
     "sha256": "12ac7406dbb255e20c682fa11c001ffa37cc626830f3b0310e2bb02554995fa7",
@@ -49,5 +50,9 @@
     "relocated_offset": "0xD2700",
     "scope": "historical one-FE experiment, text supplied privately; independent ROM and saves",
     "separate_process_save_load_overwrite_verified": true
-  }
+  },
+  "public_build_entry": "P06; private text configuration required",
+  "historical_builds": [
+    "P05"
+  ]
 }

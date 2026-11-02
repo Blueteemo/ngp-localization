@@ -13,6 +13,7 @@ import re
 from environment import FONT_ROOT, PROJECT
 from ngp_localization.glyph12 import pack
 from ngp_localization.paths import ensure_distinct_paths
+from ngp_localization.artifacts import publish_artifacts
 from ngp_localization.textmap import encode_record
 
 BASE_SHA = '12ac7406dbb255e20c682fa11c001ffa37cc626830f3b0310e2bb02554995fa7'
@@ -109,10 +110,38 @@ def parse_target(text, record):
     limits = source_widths if positioned else [max(12, n) if half_width else 12 for n in source_widths]
     if len(widths) != len(limits) or any(n > limit for n, limit in zip(widths, limits)):
         raise ValueError('Translation exceeds source-positioned or visible line width limits')
-    mode = 'positioned_source_segments' if positioned else 'source_half_width_lines' if half_width else '12_glyph_lines'
+    if half_width:
+        previous_glyph = None
+        for kind, value in events:
+            if kind == 'glyph':
+                previous_glyph = value
+            elif value[0] in (0x81, 0x83, 0x87):
+                previous_glyph = None
+            elif value == b'\x8b' and previous_glyph is not None:
+                if not (0x20 <= ord(previous_glyph) <= 0x7e or previous_glyph in '「」'):
+                    raise ValueError('8B cursor compression requires a narrow ASCII/bracket glyph')
+    if half_width and not positioned:
+        # 8B is a cursor adjustment, not permission to pack arbitrary CJK.
+        # Only unchanged, mapped source ASCII/bracket lines may exceed 12 cells.
+        source_lines = record.get('rendered_text', '').split('\n')
+        target_lines = [[]]
+        for kind, value in events:
+            if kind == 'glyph':
+                target_lines[-1].append(value)
+            elif value[0] in (0x81, 0x83):
+                target_lines.append([])
+        for index, line in enumerate(target_lines):
+            if len(line) <= 12:
+                continue
+            visible = ''.join(line)
+            if (index >= len(source_lines) or visible != source_lines[index]
+                    or any(not (0x20 <= ord(c) <= 0x7e or c in '「」') for c in visible)):
+                raise ValueError('Long 8B lines require unchanged mapped source ASCII/brackets')
+    mode = 'positioned_source_segments'  if positioned else 'source_half_width_lines' if half_width else '12_glyph_lines'
     return events, {'mode': mode, 'widths': widths, 'limits': limits,
+                    'validation_scope': 'structural constraints only; raster overlap requires visual verification',
                     'source_widths': source_widths,
-                    'ascii_sequence_validation': 'external_required' if half_width and not positioned else 'not_applicable'}
+                    'ascii_sequence_validation': 'unchanged_long_ascii_lines' if half_width and not positioned else 'not_applicable'}
 
 
 def prepare_plan(base, inventory, translations, selection):
@@ -298,16 +327,36 @@ def read_json(path):
     return parse_json_bytes(path.read_bytes())
 
 
+def read_input_set(path, paths):
+    """A producer publishes this small hash manifest only after all inputs exist.
+
+    Consumers pin its bytes once; mixed generations fail closed instead of
+    attempting to infer consistency from independent mtime checks or file locks.
+    """
+    raw = path.read_bytes()
+    expected = parse_json_bytes(raw)
+    names = ('inventory', 'translations', 'selection')
+    if not isinstance(expected, dict) or set(expected) != set(names):
+        raise ValueError('Input set must contain exactly inventory/translations/selection SHA256')
+    for value in expected.values():
+        if not isinstance(value, str) or not re.fullmatch(r'[0-9a-f]{64}', value):
+            raise ValueError('Invalid input-set SHA256')
+    snapshots = {name: paths[name].read_bytes() for name in names}
+    if any(hashlib.sha256(snapshots[name]).hexdigest() != expected[name] for name in names):
+        raise ValueError('Input generation differs from pinned input-set manifest')
+    return snapshots, hashlib.sha256(raw).hexdigest()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ('rom', 'inventory', 'translations', 'selection', 'out'):
+    for name in ('rom', 'inventory', 'translations', 'selection', 'input-set', 'out'):
         parser.add_argument('--'+name, type=Path, required=True)
     args = parser.parse_args()
     try:
         lock_path = PROJECT / 'assets/fonts.lock.json'
         lock = read_json(lock_path)['12']
         font_path = FONT_ROOT / 'fusion12' / lock['filename']
-        inputs = [args.rom, args.inventory, args.translations, args.selection, lock_path, font_path]
+        inputs = [args.rom, args.inventory, args.translations, args.selection, args.input_set, lock_path, font_path]
         outputs = [args.out / 'Pure_story.ngc', args.out / 'story_manifest.json']
         ensure_distinct_paths(inputs, [args.out, *outputs])
         if args.out.exists():
@@ -319,7 +368,7 @@ def main():
         font_hash = hashlib.sha256(font_data).hexdigest()
         if font_hash != lock['sha256']:
             raise ValueError('Pinned Fusion 12px font hash does not match')
-        snapshots = {name: getattr(args, name).read_bytes() for name in ('inventory', 'translations', 'selection')}
+        snapshots, input_set_hash = read_input_set(args.input_set, {name: getattr(args, name) for name in ('inventory', 'translations', 'selection')})
         plans = prepare_plan(base, *(parse_json_bytes(snapshots[name]) for name in ('inventory', 'translations', 'selection')))
         chars = collect_characters(plans)
         data, manifest = build_image(base, plans, chars, render_glyphs(chars, font_data))
@@ -329,16 +378,15 @@ def main():
                          'source_sha256': SOURCE_SHA, 'base_sha256': BASE_SHA,
                          'output_sha256': hashlib.sha256(data).hexdigest(), 'rom_size': len(data),
                          'font_sha256': font_hash,
+                         'input_set_sha256': input_set_hash,
                          'inventory_sha256': hashlib.sha256(snapshots['inventory']).hexdigest(),
                          'translations_sha256': hashlib.sha256(snapshots['translations']).hexdigest(),
                          'selection_sha256': hashlib.sha256(snapshots['selection']).hexdigest(),
                          'glyph_characters': chars})
-        args.out.mkdir(parents=True, exist_ok=False)
-        with outputs[0].open('xb') as stream:
-            stream.write(data)
-        with outputs[1].open('x', encoding='utf-8') as stream:
-            json.dump(manifest, stream, ensure_ascii=False, indent=2)
-            stream.write('\n')
+        publish_artifacts(args.out, {
+            'Pure_story.ngc': bytes(data),
+            'story_manifest.json': (json.dumps(manifest, ensure_ascii=False, indent=2)+'\n').encode('utf-8'),
+        })
         print(json.dumps({key:manifest[key] for key in ('kind','record_count','glyph_count','output_sha256')}, ensure_ascii=False))
     except (OSError, ValueError, KeyError, TypeError) as exc:
         parser.exit(2, f'Error: {exc}\n')

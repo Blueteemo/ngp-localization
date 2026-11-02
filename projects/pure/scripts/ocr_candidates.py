@@ -28,7 +28,7 @@ def main():
     digest = hashlib.sha256(data).hexdigest()
     if digest != '5e304f68ca29fff2def6c5f4209224871156b9502f041d69129d025f0245428d':
         raise ValueError('Wrong original baseline')
-    ids = json.loads(args.ids.read_text())
+    ids = json.loads(args.ids.read_text(encoding='utf-8'))
     if not isinstance(ids, list) or not ids or any(type(i) is not int or i < 0 or (i+1)*18 > 0x10000 for i in ids):
         raise ValueError('Expected a nonempty array of original font-bank glyph IDs')
     ids = sorted(set(ids))
@@ -61,7 +61,7 @@ def main():
         results = list(pool.map(recognize, ids))
     result = {'kind': 'unreviewed OCR candidates only', 'source_sha256': digest, 'model_sha256': model_sha,
               'engine': version, 'glyph_count': len(ids), 'candidates': results}
-    (args.out / 'candidates.json').write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    (args.out / 'candidates.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
     print(json.dumps({'glyph_count': len(ids), 'nonempty_candidates': sum(bool(x['candidate']) for x in results),
                       'single_character_candidates': sum(len(x['candidate']) == 1 for x in results),
                       'errors': sum('error' in x for x in results), 'reviewed': 0}))
