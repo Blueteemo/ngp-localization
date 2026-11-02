@@ -1,8 +1,8 @@
 {
   "game": "Memories Off - Pure (Japan)",
   "platform_verified": "NGPC",
-  "as_of": "2026-10-24",
-  "frozen_version": "P05",
+  "as_of": "2026-11-02",
+  "frozen_version": "P06",
   "scope": "Chinese menus, opening narration, related profiles and UI prompts; story remains Japanese",
   "baseline": {
     "size": 1048576,
@@ -18,9 +18,7 @@
     "changed_bytes": 20542
   },
   "story_work": {
-    "translation_started": false,
-    "complete_unicode_script_export_available": false,
-    "complete_japanese_glyph_mapping_available": false,
+    "public_scope": "tooling and engineering methods only; active translation data and status stay private",
     "provisional_dialogue_candidates": 5852,
     "provisional_display_glyph_tokens": 107803,
     "provisional_distinct_glyph_ids": 1155
@@ -31,5 +29,25 @@
     "Full story routes and real NGPC hardware acceptance are not completed."
   ],
   "independent_agent_handoff_acceptance": "not performed; explicitly deferred",
-  "source_migration_rebuild": "P05 output SHA-256 matched in the original workspace"
+  "source_migration_rebuild": "P05 source and P06 adapter plus private prompt input matched frozen SHA-256; P06 manifest rebuild byte-identical",
+  "available_frozen_builds": [
+    "P05",
+    "P06"
+  ],
+  "default_build_version": "P05",
+  "p06": {
+    "size": 1048576,
+    "sha256": "12ac7406dbb255e20c682fa11c001ffa37cc626830f3b0310e2bb02554995fa7",
+    "translated_fields": 145,
+    "private_glyph_tiles": 318,
+    "changed_bytes": 20532,
+    "source_rebuild": "matched release byte-for-byte"
+  },
+  "story_sample": {
+    "sha256": "1edba7ead4c841408214d0dc8bc92643142e529e125b021957d7fbf60eeab257",
+    "original_offset": "0x93377",
+    "relocated_offset": "0xD2700",
+    "scope": "historical one-FE experiment, text supplied privately; independent ROM and saves",
+    "separate_process_save_load_overwrite_verified": true
+  }
 }
